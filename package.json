@@ -13,13 +13,16 @@
     "type": "git",
     "url": "git+https://github.com/reflective-technology/github-tag-action.git"
   },
+  "bugs": {
+    "url": "https://github.com/reflective-technology/github-tag-action/issues"
+  },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
   "engines": {
-    "node": ">=24"
+    "node": "24"
   },
   "author": "ZUIN Technology Co., Ltd.",
   "license": "MIT",
