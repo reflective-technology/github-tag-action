@@ -1,0 +1,62 @@
+name: Auto Tagging
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "package.json"
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      value: ${{ steps.get_version.outputs.value }}
+      tagged: ${{ steps.tagged.outputs.tagged }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+      - name: Extract version from package.json
+        uses: sergeysova/jq-action@a3f0d4ff59cc1dddf023fc0b325dd75b10deec58
+        id: get_version
+        with:
+          cmd: "jq .version package.json -r"
+      - name: Debug Version
+        run: echo "VERSION=${{ steps.get_version.outputs.value }}"
+      - name: "Check: package version has corresponding git tag"
+        id: tagged
+        shell: bash
+        run: |
+          git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.get_version.outputs.value }}" &&
+          echo "tagged=true" >> $GITHUB_OUTPUT ||
+          echo "tagged=false" >> $GITHUB_OUTPUT
+      - name: Debug Output
+        run: echo "TAGGED=${{ steps.tagged.outputs.tagged }}"
+  tag:
+    runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.value != '0.0.0' && needs.version.outputs.tagged == 'false'
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - name: Push tag
+        id: tag_version
+        uses: reflective-technology/github-tag-action@c3da065c3412e17e29e9f66c7a08ce8e41aaa1df
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: "v"
+          custom_tag: ${{ needs.version.outputs.value }}
+      - uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd
+        with:
+          makeLatest: ${{ !contains(needs.version.outputs.value, 'rc') }}
+          prerelease: ${{ contains(needs.version.outputs.value, 'rc') }}
+          generateReleaseNotes: true
+          skipIfReleaseExists: true
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
