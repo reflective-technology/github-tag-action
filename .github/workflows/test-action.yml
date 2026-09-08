@@ -1,7 +1,8 @@
 name: Test Tag Action
 on:
   workflow_dispatch:
-
+permissions:
+  contents: read
 jobs:
   # Test 1: Dry run - verify outputs without creating tags
   dry-run:
