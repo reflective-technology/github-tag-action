@@ -1,0 +1,235 @@
+name: Test Tag Action
+on:
+  workflow_dispatch:
+
+jobs:
+  # Test 1: Dry run - verify outputs without creating tags
+  dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run tag action (dry run)
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: master
+          dry_run: "true"
+
+      - name: Verify outputs
+        run: |
+          echo "## Dry Run Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Output | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| new_tag | \`${{ steps.tag.outputs.new_tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| new_version | \`${{ steps.tag.outputs.new_version }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| previous_tag | \`${{ steps.tag.outputs.previous_tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| previous_version | \`${{ steps.tag.outputs.previous_version }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| release_type | \`${{ steps.tag.outputs.release_type }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.tag.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+
+          failed=0
+          if [ -z "${{ steps.tag.outputs.new_tag }}" ]; then
+            echo "::error::new_tag is empty"
+            failed=1
+          fi
+          if [ -z "${{ steps.tag.outputs.new_version }}" ]; then
+            echo "::error::new_version is empty"
+            failed=1
+          fi
+          if [ -z "${{ steps.tag.outputs.release_type }}" ]; then
+            echo "::error::release_type is empty"
+            failed=1
+          fi
+          exit $failed
+
+  # Test 2: Custom tag
+  custom-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run with custom tag (dry run)
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: master
+          custom_tag: "99.99.99"
+          dry_run: "true"
+
+      - name: Verify custom tag
+        run: |
+          echo "## Custom Tag Results" >> $GITHUB_STEP_SUMMARY
+          echo "Expected: v99.99.99" >> $GITHUB_STEP_SUMMARY
+          echo "Got: ${{ steps.tag.outputs.new_tag }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.tag.outputs.new_tag }}" != "v99.99.99" ]; then
+            echo "::error::Expected v99.99.99, got ${{ steps.tag.outputs.new_tag }}"
+            exit 1
+          fi
+          if [ "${{ steps.tag.outputs.release_type }}" != "custom" ]; then
+            echo "::error::Expected release_type=custom, got ${{ steps.tag.outputs.release_type }}"
+            exit 1
+          fi
+          echo "✅ Custom tag works" >> $GITHUB_STEP_SUMMARY
+
+  # Test 3: Custom prefix
+  custom-prefix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run with custom prefix (dry run)
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: master
+          tag_prefix: "release-v"
+          dry_run: "true"
+
+      - name: Verify prefix
+        run: |
+          echo "## Custom Prefix Results" >> $GITHUB_STEP_SUMMARY
+          echo "Tag: ${{ steps.tag.outputs.new_tag }}" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ steps.tag.outputs.new_tag }}" != release-v* ]]; then
+            echo "::error::Tag doesn't start with release-v"
+            exit 1
+          fi
+          echo "✅ Custom prefix works" >> $GITHUB_STEP_SUMMARY
+
+  # Test 4: Custom release rules
+  custom-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run with custom rules (dry run)
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: master
+          custom_release_rules: "hotfix:patch,improvement:minor"
+          dry_run: "true"
+
+      - name: Verify custom rules
+        run: |
+          echo "## Custom Rules Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Output | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| new_tag | \`${{ steps.tag.outputs.new_tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| release_type | \`${{ steps.tag.outputs.release_type }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Custom rules accepted" >> $GITHUB_STEP_SUMMARY
+
+  # Test 5: No bump when default_bump is false
+  no-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run with default_bump false (dry run)
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: master
+          default_bump: "false"
+          dry_run: "true"
+
+      - name: Verify behavior
+        run: |
+          echo "## No Bump Results" >> $GITHUB_STEP_SUMMARY
+          echo "new_tag: \`${{ steps.tag.outputs.new_tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "release_type: \`${{ steps.tag.outputs.release_type }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "✅ No bump test completed" >> $GITHUB_STEP_SUMMARY
+
+  # Test 6: Non-release branch (should calculate but not tag)
+  non-release-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Run on non-release branch
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: "this-branch-does-not-exist"
+          pre_release_branches: "also-does-not-exist"
+
+      - name: Verify no tag created
+        run: |
+          echo "## Non-Release Branch Results" >> $GITHUB_STEP_SUMMARY
+          echo "new_version: \`${{ steps.tag.outputs.new_version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Expected: version calculated but no tag created" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Non-release branch test completed" >> $GITHUB_STEP_SUMMARY
+
+  # Test 7: Fetch all tags
+  fetch-all-tags:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run with fetch_all_tags
+        id: tag
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: master
+          fetch_all_tags: "true"
+          dry_run: "true"
+
+      - name: Verify
+        run: |
+          echo "## Fetch All Tags Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Output | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| new_tag | \`${{ steps.tag.outputs.new_tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| previous_tag | \`${{ steps.tag.outputs.previous_tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Fetch all tags works" >> $GITHUB_STEP_SUMMARY
+
+  # Summary of all tests
+  summary:
+    runs-on: ubuntu-latest
+    needs: [dry-run, custom-tag, custom-prefix, custom-rules, no-bump, non-release-branch, fetch-all-tags]
+    if: always()
+    steps:
+      - name: Results
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Test | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Dry Run | ${{ needs.dry-run.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Custom Tag | ${{ needs.custom-tag.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Custom Prefix | ${{ needs.custom-prefix.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Custom Rules | ${{ needs.custom-rules.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| No Bump | ${{ needs.no-bump.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Non-Release Branch | ${{ needs.non-release-branch.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fetch All Tags | ${{ needs.fetch-all-tags.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+
+          # Fail if any test failed
+          if [ "${{ contains(needs.*.result, 'failure') }}" == "true" ]; then
+            echo "::error::Some tests failed"
+            exit 1
+          fi

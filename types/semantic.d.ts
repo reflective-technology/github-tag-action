@@ -1,10 +1,9 @@
 /// <reference types="semver" />
-
 declare module '@semantic-release/commit-analyzer' {
   export function analyzeCommits(
     config: {
       preset?: string;
-      config?: string;
+      config?: any;
       parserOpts?: any;
       releaseRules?:
         | string
@@ -18,15 +17,14 @@ declare module '@semantic-release/commit-analyzer' {
     args: {
       commits: { message: string; hash: string | null }[];
       logger: { log: (args: any) => void };
-    }
+    },
   ): Promise<any>;
 }
-
 declare module '@semantic-release/release-notes-generator' {
   export function generateNotes(
     config: {
       preset?: string;
-      config?: string;
+      config?: any;
       parserOpts?: any;
       writerOpts?: any;
       releaseRules?:
@@ -36,16 +34,17 @@ declare module '@semantic-release/release-notes-generator' {
             release: string;
             scope?: string;
           }[];
-      presetConfig?: any; // Depends on used preset
+      presetConfig?: any;
     },
     args: {
       commits: { message: string; hash: string | null }[];
+      cwd?: string;
       logger: { log: (args: any) => void };
       options: {
         repositoryUrl: string;
       };
       lastRelease: { gitTag: string };
       nextRelease: { gitTag: string; version: string };
-    }
+    },
   ): Promise<string>;
 }
