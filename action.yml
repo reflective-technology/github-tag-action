@@ -1,4 +1,4 @@
-name: "Auto Tag Action"
+name: "Tag and Changelog Action"
 description: "Bump and push git tag on merge"
 author: "ZUIN Technology Co., Ltd."
 outputs:
