@@ -1,6 +1,6 @@
-name: "GitHub Tag"
+name: "Auto Tag Action"
 description: "Bump and push git tag on merge"
-author: "Mathieu Dutour"
+author: "ZUIN Technology Co., Ltd."
 outputs:
   new_tag:
     description: "Generated tag"
@@ -66,5 +66,5 @@ runs:
   using: "node24"
   main: "lib/main.js"
 branding:
-  icon: "git-merge"
-  color: "purple"
+  icon: "tag"
+  color: "blue"
