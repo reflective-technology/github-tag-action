@@ -129,4 +129,11 @@ If no commit message contains any information, then **default_bump** will be use
 
 ## Credits
 
-[anothrNick/github-tag-action](https://github.com/anothrNick/github-tag-action) - a similar action using a Dockerfile (hence not working on macOS)
+This repository is derived from:
+
+- [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) - The original inspiration and base for this GitHub Action
+- [Srxzwei/github-tag-action](https://github.com/Srxzwei/github-tag-action) - Additional source and reference implementation
+
+Other related work:
+
+- [anothrNick/github-tag-action](https://github.com/anothrNick/github-tag-action) - a similar action using a Dockerfile (hence not working on macOS)
