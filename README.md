@@ -133,6 +133,7 @@ This repository is derived from:
 
 - [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) - The original inspiration and base for this GitHub Action
 - [Srxzwei/github-tag-action](https://github.com/Srxzwei/github-tag-action) - Additional source and reference implementation
+- [nickkostov/github-tag-action](https://github.com/nickkostov/github-tag-action) - Another source and reference implementation
 
 Other related work:
 
