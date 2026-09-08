@@ -64,7 +64,7 @@ inputs:
 
 runs:
   using: "node24"
-  main: "lib/main.js"
+  main: "dist/index.js"
 branding:
   icon: "tag"
   color: "blue"

@@ -4,7 +4,7 @@ import path from 'path';
 
 export function setRepository(
   GITHUB_SERVER_URL: string,
-  GITHUB_REPOSITORY: string
+  GITHUB_REPOSITORY: string,
 ) {
   process.env['GITHUB_SERVER_URL'] = GITHUB_SERVER_URL;
   process.env['GITHUB_REPOSITORY'] = GITHUB_REPOSITORY;
@@ -29,7 +29,7 @@ export function setInputs(map: { [key: string]: string }) {
 export function loadDefaultInputs() {
   const actionYaml = fs.readFileSync(
     path.join(process.cwd(), 'action.yml'),
-    'utf-8'
+    'utf-8',
   );
   const actionJson = yaml.load(actionYaml) as {
     inputs: { [key: string]: { default?: string } };
@@ -38,7 +38,7 @@ export function loadDefaultInputs() {
     .filter((key) => actionJson['inputs'][key].default)
     .reduce(
       (obj, key) => ({ ...obj, [key]: actionJson['inputs'][key].default }),
-      {}
+      {},
     );
   setInputs(defaultInputs);
 }

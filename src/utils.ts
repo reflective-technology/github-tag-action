@@ -1,22 +1,31 @@
 import * as core from '@actions/core';
 import { prerelease, rcompare, valid } from 'semver';
 // @ts-ignore
-import DEFAULT_RELEASE_TYPES from '@semantic-release/commit-analyzer/lib/default-release-types';
-import { compareCommits, listTags } from './github';
-import { defaultChangelogRules } from './defaults';
-import { Await } from './ts';
+const DEFAULT_RELEASE_TYPES = [
+  'major',
+  'premajor',
+  'minor',
+  'preminor',
+  'patch',
+  'prepatch',
+  'prerelease',
+];
 
-type Tags = Await<ReturnType<typeof listTags>>;
+import { compareCommits, listTags } from './github.js';
+import { defaultChangelogRules } from './defaults.js';
+
+type Tags = Awaited<ReturnType<typeof listTags>>;
+type Commits = Awaited<ReturnType<typeof compareCommits>>;
 
 export async function getValidTags(
   prefixRegex: RegExp,
-  shouldFetchAllTags: boolean
+  shouldFetchAllTags: boolean,
 ) {
   const tags = await listTags(shouldFetchAllTags);
 
   const invalidTags = tags.filter(
     (tag) =>
-      !prefixRegex.test(tag.name) || !valid(tag.name.replace(prefixRegex, ''))
+      !prefixRegex.test(tag.name) || !valid(tag.name.replace(prefixRegex, '')),
   );
 
   invalidTags.forEach((name) => core.debug(`Found Invalid Tag: ${name}.`));
@@ -24,10 +33,13 @@ export async function getValidTags(
   const validTags = tags
     .filter(
       (tag) =>
-        prefixRegex.test(tag.name) && valid(tag.name.replace(prefixRegex, ''))
+        prefixRegex.test(tag.name) && valid(tag.name.replace(prefixRegex, '')),
     )
     .sort((a, b) =>
-      rcompare(a.name.replace(prefixRegex, ''), b.name.replace(prefixRegex, ''))
+      rcompare(
+        a.name.replace(prefixRegex, ''),
+        b.name.replace(prefixRegex, ''),
+      ),
     );
 
   validTags.forEach((tag) => core.debug(`Found Valid Tag: ${tag.name}.`));
@@ -37,13 +49,13 @@ export async function getValidTags(
 
 export async function getCommits(
   baseRef: string,
-  headRef: string
+  headRef: string,
 ): Promise<{ message: string; hash: string | null }[]> {
   const commits = await compareCommits(baseRef, headRef);
 
   return commits
-    .filter((commit) => !!commit.commit.message)
-    .map((commit) => ({
+    .filter((commit: Commits[number]) => !!commit.commit.message)
+    .map((commit: Commits[number]) => ({
       message: commit.commit.message,
       hash: commit.sha,
     }));
@@ -60,10 +72,14 @@ export function isPr(ref: string) {
 export function getLatestTag(
   tags: Tags,
   prefixRegex: RegExp,
-  tagPrefix: string
+  tagPrefix: string,
 ) {
   return (
-    tags.find((tag) => !prerelease(tag.name.replace(prefixRegex, ''))) || {
+    tags.find(
+      (tag) =>
+        prefixRegex.test(tag.name) &&
+        !prerelease(tag.name.replace(prefixRegex, '')),
+    ) || {
       name: `${tagPrefix}0.0.0`,
       commit: {
         sha: 'HEAD',
@@ -75,7 +91,7 @@ export function getLatestTag(
 export function getLatestPrereleaseTag(
   tags: Tags,
   identifier: string,
-  prefixRegex: RegExp
+  prefixRegex: RegExp,
 ) {
   return tags
     .filter((tag) => prerelease(tag.name.replace(prefixRegex, '')))
@@ -93,7 +109,7 @@ export function mapCustomReleaseRules(customReleaseTypes: string) {
 
       if (parts.length < 2) {
         core.warning(
-          `${customReleaseRule} is not a valid custom release definition.`
+          `${customReleaseRule} is not a valid custom release definition.`,
         );
         return false;
       }
@@ -101,12 +117,12 @@ export function mapCustomReleaseRules(customReleaseTypes: string) {
       const defaultRule = defaultChangelogRules[parts[0].toLowerCase()];
       if (customReleaseRule.length !== 3) {
         core.debug(
-          `${customReleaseRule} doesn't mention the section for the changelog.`
+          `${customReleaseRule} doesn't mention the section for the changelog.`,
         );
         core.debug(
           defaultRule
             ? `Default section (${defaultRule.section}) will be used instead.`
-            : "The commits matching this rule won't be included in the changelog."
+            : "The commits matching this rule won't be included in the changelog.",
         );
       }
 
@@ -131,14 +147,14 @@ export function mapCustomReleaseRules(customReleaseTypes: string) {
 }
 
 export function mergeWithDefaultChangelogRules(
-  mappedReleaseRules: ReturnType<typeof mapCustomReleaseRules> = []
+  mappedReleaseRules: ReturnType<typeof mapCustomReleaseRules> = [],
 ) {
   const mergedRules = mappedReleaseRules.reduce(
     (acc, curr) => ({
       ...acc,
       [curr.type]: curr,
     }),
-    { ...defaultChangelogRules }
+    { ...defaultChangelogRules },
   );
 
   return Object.values(mergedRules).filter((rule) => !!rule.section);
