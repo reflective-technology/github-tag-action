@@ -1,6 +1,7 @@
 import yaml from 'yaml';
 import fs from 'fs';
 import path from 'path';
+import { describe, it, expect } from '@jest/globals';
 
 export function setRepository(GITHUB_SERVER_URL: string, GITHUB_REPOSITORY: string) {
   process.env['GITHUB_SERVER_URL'] = GITHUB_SERVER_URL;
@@ -25,9 +26,7 @@ export function setInputs(map: Record<string, string>) {
 
 export function loadDefaultInputs() {
   const actionYaml = fs.readFileSync(path.join(process.cwd(), 'action.yml'), 'utf-8');
-  const actionJson = yaml.parse(actionYaml) as {
-    inputs: Record<string, { default?: string }>;
-  };
+  const actionJson = yaml.parse(actionYaml);
   const defaultInputs = Object.keys(actionJson['inputs'])
     .filter(key => actionJson['inputs'][key].default)
     .reduce((obj, key) => ({ ...obj, [key]: actionJson['inputs'][key].default }), {});
@@ -36,5 +35,7 @@ export function loadDefaultInputs() {
 
 // Don't know how to have this file only for test but not have 'tsc' complain. So I made it a test file...
 describe('helper', () => {
-  it('works', () => {});
+  it('works', () => {
+    expect(true).toBe(true);
+  });
 });

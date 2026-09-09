@@ -8,9 +8,6 @@ import { describe, it, expect, jest, beforeAll, beforeEach } from '@jest/globals
 const emptyFunction = () => {
   /* empty */
 };
-const asyncEmptyFunction = async () => {
-  /* empty */
-};
 
 jest.spyOn(core, 'debug').mockImplementation(emptyFunction);
 jest.spyOn(core, 'info').mockImplementation(emptyFunction);
@@ -41,13 +38,13 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'fix: this is my first fix', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
       const validTags: any[] = [];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -69,13 +66,13 @@ describe('github-tag-action', () => {
        */
       const commits: any[] = [];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
       const validTags: any[] = [];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -98,7 +95,7 @@ describe('github-tag-action', () => {
       setInput('default_bump', 'false');
       const commits: any[] = [];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -112,7 +109,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -138,7 +135,7 @@ describe('github-tag-action', () => {
         { message: 'bond: is his last name', hash: null },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -152,7 +149,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -178,7 +175,7 @@ describe('github-tag-action', () => {
         { message: 'feat: is his last name', hash: null },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -192,7 +189,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -222,7 +219,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'fix: this is my first fix', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -236,7 +233,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -258,7 +255,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'feat: this is my first feature', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -272,7 +269,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -299,7 +296,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -313,7 +310,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -335,7 +332,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'feat: some new feature on a release branch', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -363,7 +360,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -392,7 +389,7 @@ describe('github-tag-action', () => {
         { message: 'james: this should make a preminor', hash: null },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -406,7 +403,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -437,7 +434,7 @@ describe('github-tag-action', () => {
       setInput('default_prerelease_bump', 'false');
       const commits: any[] = [];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -451,7 +448,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -474,7 +471,7 @@ describe('github-tag-action', () => {
       setInput('default_prerelease_bump', 'prerelease');
       const commits = [{ message: 'this is my first fix', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -488,7 +485,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -510,7 +507,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'fix: this is my first fix', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -524,7 +521,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -546,7 +543,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'feat: this is my first feature', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -560,7 +557,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -587,7 +584,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -601,7 +598,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -628,7 +625,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -656,7 +653,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -685,7 +682,7 @@ describe('github-tag-action', () => {
         { message: 'james: this should make a preminor', hash: null },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -699,7 +696,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -730,7 +727,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'fix: this is my first fix', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -744,7 +741,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -767,7 +764,7 @@ describe('github-tag-action', () => {
        */
       const commits = [{ message: 'feat: this is my first feature', hash: null }];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -781,7 +778,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 
@@ -809,7 +806,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getCommits').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return commits;
       });
 
@@ -823,7 +820,7 @@ describe('github-tag-action', () => {
         },
       ];
       jest.spyOn(utils, 'getValidTags').mockImplementation(async () => {
-        await asyncEmptyFunction();
+        await Promise.resolve();
         return validTags;
       });
 

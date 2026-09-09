@@ -3,9 +3,14 @@ import { getValidTags } from '../src/utils';
 import * as core from '@actions/core';
 import * as github from '../src/github';
 import { defaultChangelogRules } from '../src/defaults';
+import { describe, it, expect, jest } from '@jest/globals';
 
-jest.spyOn(core, 'debug').mockImplementation(() => {});
-jest.spyOn(core, 'warning').mockImplementation(() => {});
+const emptyFunction = () => {
+  /* empty */
+};
+
+jest.spyOn(core, 'debug').mockImplementation(emptyFunction);
+jest.spyOn(core, 'warning').mockImplementation(emptyFunction);
 
 const regex = /^v/;
 
@@ -64,7 +69,10 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => {
+      await Promise.resolve();
+      return testTags;
+    });
 
     /*
      * When
@@ -112,7 +120,10 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => {
+      await Promise.resolve();
+      return testTags;
+    });
 
     /*
      * When
@@ -159,7 +170,10 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => {
+      await Promise.resolve();
+      return testTags;
+    });
     /*
      * When
      */

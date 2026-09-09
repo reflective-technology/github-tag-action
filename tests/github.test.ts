@@ -30,7 +30,7 @@ jest.mock(
 describe('github', () => {
   it('returns all tags', async () => {
     const tags = await listTags(true);
-    expect(tags.length).toEqual(500);
+    expect(tags).toHaveLength(500);
     expect(tags[499]).toEqual({
       name: 'v0.0.499',
       commit: { sha: 'string', url: 'string' },
@@ -42,7 +42,7 @@ describe('github', () => {
 
   it('returns only the last 100 tags', async () => {
     const tags = await listTags(true);
-    expect(tags.length).toEqual(500);
+    expect(tags).toHaveLength(500);
     expect(tags[99]).toEqual({
       name: 'v0.0.99',
       commit: { sha: 'string', url: 'string' },
