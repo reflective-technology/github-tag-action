@@ -471,13 +471,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@conventional-changelog/template@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@conventional-changelog/template@npm:1.4.0"
-  checksum: 10/dac527b0eb01ff4b2457b560f3fb61e24c8797cd5e7cafe4d4561454352714d8aec4d39092a15da068fc082878b1713a589cfd8471267f340f9a78c28057d74b
-  languageName: node
-  linkType: hard
-
 "@emnapi/core@npm:1.10.0":
   version: 1.10.0
   resolution: "@emnapi/core@npm:1.10.0"
@@ -2961,12 +2954,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:^10.4.0":
-  version: 10.4.0
-  resolution: "conventional-changelog-conventionalcommits@npm:10.4.0"
+"conventional-changelog-conventionalcommits@npm:^9.0.0":
+  version: 9.3.1
+  resolution: "conventional-changelog-conventionalcommits@npm:9.3.1"
   dependencies:
-    "@conventional-changelog/template": "npm:^1.4.0"
-  checksum: 10/e277c5e7226fc108478d5b67c6a581673b3443e022cfa3eea300e6ddf2683a93690048f9f07fb4e24b01ef174ab77c6cf04406b21afb70f9de5a7a61cb6acecf
+    compare-func: "npm:^2.0.0"
+  checksum: 10/6b924adcf31d36cbe1442f5c2d29dad345666bea9e805d8af6bfa28ab694e93abbdcb2462716b2a993f6eabf1d4bdc45209076249bd4825f5513ff061a99a4a2
   languageName: node
   linkType: hard
 
@@ -3800,7 +3793,7 @@ __metadata:
     "@types/node": "npm:^24.12.0"
     "@types/semver": "npm:^7.3.9"
     "@vercel/ncc": "npm:^0.45.0"
-    conventional-changelog-conventionalcommits: "npm:^10.4.0"
+    conventional-changelog-conventionalcommits: "npm:^9.0.0"
     eslint: "npm:^10.10.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-prettier: "npm:^5.5.6"
