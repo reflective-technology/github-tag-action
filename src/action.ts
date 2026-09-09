@@ -18,17 +18,13 @@ import { createTag } from './github.js';
 
 export default async function main() {
   const defaultBump = core.getInput('default_bump') as ReleaseType | 'false';
-  const defaultPreReleaseBump = core.getInput('default_prerelease_bump') as
-    | ReleaseType
-    | 'false';
+  const defaultPreReleaseBump = core.getInput('default_prerelease_bump') as ReleaseType | 'false';
   const tagPrefix = core.getInput('tag_prefix');
   const customTag = core.getInput('custom_tag');
   const releaseBranches = core.getInput('release_branches');
   const preReleaseBranches = core.getInput('pre_release_branches');
   const appendToPreReleaseTag = core.getInput('append_to_pre_release_tag');
-  const createAnnotatedTag = /true/i.test(
-    core.getInput('create_annotated_tag'),
-  );
+  const createAnnotatedTag = /true/i.test(core.getInput('create_annotated_tag'));
   const dryRun = core.getInput('dry_run');
   const customReleaseRules = core.getInput('custom_release_rules');
   const shouldFetchAllTags = core.getInput('fetch_all_tags');
@@ -53,33 +49,20 @@ export default async function main() {
   }
 
   const currentBranch = getBranchFromRef(GITHUB_REF);
-  const isReleaseBranch = releaseBranches
-    .split(',')
-    .some((branch) => currentBranch.match(branch));
-  const isPreReleaseBranch = preReleaseBranches
-    .split(',')
-    .some((branch) => currentBranch.match(branch));
+  const isReleaseBranch = releaseBranches.split(',').some(branch => currentBranch.match(branch));
+  const isPreReleaseBranch = preReleaseBranches.split(',').some(branch => currentBranch.match(branch));
   const isPullRequest = isPr(GITHUB_REF);
   const isPrerelease = !isReleaseBranch && !isPullRequest && isPreReleaseBranch;
 
   // Sanitize identifier according to
   // https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions
-  const identifier = (
-    appendToPreReleaseTag ? appendToPreReleaseTag : currentBranch
-  ).replace(/[^a-zA-Z0-9-]/g, '-');
+  const identifier = (appendToPreReleaseTag ? appendToPreReleaseTag : currentBranch).replace(/[^a-zA-Z0-9-]/g, '-');
 
   const prefixRegex = new RegExp(`^${tagPrefix}`);
 
-  const validTags = await getValidTags(
-    prefixRegex,
-    /true/i.test(shouldFetchAllTags),
-  );
+  const validTags = await getValidTags(prefixRegex, /true/i.test(shouldFetchAllTags));
   const latestTag = getLatestTag(validTags, prefixRegex, tagPrefix);
-  const latestPrereleaseTag = getLatestPrereleaseTag(
-    validTags,
-    identifier,
-    prefixRegex,
-  );
+  const latestPrereleaseTag = getLatestPrereleaseTag(validTags, identifier, prefixRegex);
 
   let commits: Awaited<ReturnType<typeof getCommits>>;
 
@@ -96,10 +79,7 @@ export default async function main() {
     if (!latestPrereleaseTag) {
       previousTag = latestTag;
     } else {
-      previousTag = gte(
-        latestTag.name.replace(prefixRegex, ''),
-        latestPrereleaseTag.name.replace(prefixRegex, ''),
-      )
+      previousTag = gte(latestTag.name.replace(prefixRegex, ''), latestPrereleaseTag.name.replace(prefixRegex, ''))
         ? latestTag
         : latestPrereleaseTag;
     }
@@ -116,9 +96,7 @@ export default async function main() {
       return;
     }
 
-    core.info(
-      `Previous tag was ${previousTag.name}, previous version was ${previousVersion.version}.`,
-    );
+    core.info(`Previous tag was ${previousTag.name}, previous version was ${previousVersion.version}.`);
     core.setOutput('previous_version', previousVersion.version);
     core.setOutput('previous_tag', previousTag.name);
 
@@ -148,9 +126,7 @@ export default async function main() {
 
     // Default bump is set to false and we did not find an automatic bump
     if (!shouldContinue) {
-      core.debug(
-        'No commit specifies the version bump. Skipping the tag creation.',
-      );
+      core.debug('No commit specifies the version bump. Skipping the tag creation.');
       return;
     }
 
@@ -165,9 +141,7 @@ export default async function main() {
       bump = bump.replace(preReg, '');
     }
 
-    const releaseType: ReleaseType = isPrerelease
-      ? `pre${bump}`
-      : bump || defaultBump;
+    const releaseType: ReleaseType = isPrerelease ? `pre${bump}` : bump || defaultBump;
     core.setOutput('release_type', releaseType);
 
     const incrementedVersion = inc(previousVersion, releaseType, identifier);
@@ -216,9 +190,7 @@ export default async function main() {
   core.setOutput('changelog', changelog);
 
   if (!isReleaseBranch && !isPreReleaseBranch) {
-    core.info(
-      'This branch is neither a release nor a pre-release branch. Skipping the tag creation.',
-    );
+    core.info('This branch is neither a release nor a pre-release branch. Skipping the tag creation.');
     return;
   }
 

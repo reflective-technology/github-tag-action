@@ -64,9 +64,7 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest
-      .spyOn(github, 'listTags')
-      .mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => testTags);
 
     /*
      * When
@@ -114,9 +112,7 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest
-      .spyOn(github, 'listTags')
-      .mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => testTags);
 
     /*
      * When
@@ -163,9 +159,7 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest
-      .spyOn(github, 'listTags')
-      .mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => testTags);
     /*
      * When
      */
@@ -189,8 +183,7 @@ describe('utils', () => {
       /*
        * Given
        */
-      const customReleasesString =
-        'james:preminor,bond:premajor,007:major:Breaking Changes,feat:minor';
+      const customReleasesString = 'james:preminor,bond:premajor,007:major:Breaking Changes,feat:minor';
 
       /*
        * When
@@ -249,10 +242,7 @@ describe('utils', () => {
       /**
        * Then
        */
-      expect(result).toEqual([
-        ...Object.values(defaultChangelogRules),
-        newRule,
-      ]);
+      expect(result).toEqual([...Object.values(defaultChangelogRules), newRule]);
     });
 
     it('overwrites existing default type rules with provided rules', () => {
@@ -269,7 +259,7 @@ describe('utils', () => {
        * When
        */
       const result = utils.mergeWithDefaultChangelogRules([newRule]);
-      const overWrittenRule = result.find((rule) => rule.type === 'feat');
+      const overWrittenRule = result.find(rule => rule.type === 'feat');
 
       /**
        * Then

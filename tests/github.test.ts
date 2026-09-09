@@ -7,21 +7,19 @@ jest.mock(
     getOctokit: jest.fn().mockReturnValue({
       rest: {
         repos: {
-          listTags: jest
-            .fn()
-            .mockImplementation(({ page }: { page: number }) => {
-              if (page === 6) {
-                return { data: [] };
-              }
-              const res = [...new Array(100).keys()].map((_) => ({
-                name: `v0.0.${_ + (page - 1) * 100}`,
-                commit: { sha: 'string', url: 'string' },
-                zipball_url: 'string',
-                tarball_url: 'string',
-                node_id: 'string',
-              }));
-              return { data: res };
-            }),
+          listTags: jest.fn().mockImplementation(({ page }: { page: number }) => {
+            if (page === 6) {
+              return { data: [] };
+            }
+            const res = [...new Array(100).keys()].map(_ => ({
+              name: `v0.0.${_ + (page - 1) * 100}`,
+              commit: { sha: 'string', url: 'string' },
+              zipball_url: 'string',
+              tarball_url: 'string',
+              node_id: 'string',
+            }));
+            return { data: res };
+          }),
         },
       },
     }),
