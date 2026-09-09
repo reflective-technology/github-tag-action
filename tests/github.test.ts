@@ -1,4 +1,4 @@
-import { listTags } from '../src/github';
+import { listTags } from '../src/github.js';
 import { describe, it, expect, jest } from '@jest/globals';
 
 jest.mock(

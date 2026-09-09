@@ -1,8 +1,8 @@
-import action from '../src/action';
-import * as utils from '../src/utils';
-import * as github from '../src/github';
+import action from '../src/action.js';
+import * as utils from '../src/utils.js';
+import * as github from '../src/github.js';
 import * as core from '@actions/core';
-import { loadDefaultInputs, setBranch, setCommitSha, setInput, setRepository } from './helper.test';
+import { loadDefaultInputs, setBranch, setCommitSha, setInput, setRepository } from './helper.test.js';
 import { describe, it, expect, jest, beforeAll, beforeEach } from '@jest/globals';
 
 const emptyFunction = () => {

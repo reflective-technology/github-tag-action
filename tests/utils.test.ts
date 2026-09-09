@@ -1,8 +1,8 @@
-import * as utils from '../src/utils';
-import { getValidTags } from '../src/utils';
+import * as utils from '../src/utils.js';
+import { getValidTags } from '../src/utils.js';
 import * as core from '@actions/core';
-import * as github from '../src/github';
-import { defaultChangelogRules } from '../src/defaults';
+import * as github from '../src/github.js';
+import { defaultChangelogRules } from '../src/defaults.js';
 import { describe, it, expect, jest } from '@jest/globals';
 
 const emptyFunction = () => {
