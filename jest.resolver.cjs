@@ -1,5 +1,5 @@
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 
 function getTarget(exports, subpath) {
   if (typeof exports === 'string') {
@@ -45,7 +45,7 @@ function resolveViaExports(request, basedir) {
   return null;
 }
 
-module.exports = (request, options) => {
+const jest = (request, options) => {
   if (request.startsWith('.') || request.startsWith('/')) {
     return options.defaultResolver(request, options);
   }
@@ -58,3 +58,4 @@ module.exports = (request, options) => {
     throw e;
   }
 };
+module.exports = jest;
