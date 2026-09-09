@@ -10,7 +10,7 @@ module.exports = {
       {
         tsconfig: {
           module: "commonjs",
-          moduleResolution: "node",
+          moduleResolution: "nodenext",
           esModuleInterop: true,
           isolatedModules: true,
         },
@@ -21,7 +21,7 @@ module.exports = {
       {
         tsconfig: {
           module: "commonjs",
-          moduleResolution: "node",
+          moduleResolution: "nodenext",
           esModuleInterop: true,
           allowJs: true,
           isolatedModules: true,
