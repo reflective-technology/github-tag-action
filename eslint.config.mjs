@@ -5,6 +5,7 @@ import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import prettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default defineConfig([
   {
@@ -13,6 +14,13 @@ export default defineConfig([
   {
     files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
     extends: [js.configs.recommended, prettierRecommended, prettier],
+    languageOptions: {
+      ecmaVersion: 2025,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
     rules: {
       'prettier/prettier': [
         'error',
