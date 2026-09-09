@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc && ncc build lib/main.js -o dist",
     "test": "jest --testTimeout 10000",
-    "eslint": "eslint --fix \"{src,test,types}/**/*.{js,ts,mjs,cjs}\""
+    "lint": "eslint --fix ."
   },
   "repository": {
     "type": "git",
