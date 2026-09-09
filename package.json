@@ -23,7 +23,7 @@
     "setup"
   ],
   "engines": {
-    "node": "24"
+    "node": "24.x"
   },
   "author": "ZUIN Technology Co., Ltd.",
   "license": "MIT",
@@ -36,6 +36,7 @@
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/release-notes-generator": "^14.1.0",
     "conventional-changelog-conventionalcommits": "^10.4.0",
+    "semantic-release": "^25.0.9",
     "semver": "^7.3.5"
   },
   "devDependencies": {
@@ -48,5 +49,14 @@
     "ts-jest": "^29.4.12",
     "typescript": "^6.0.3",
     "yaml": "^2.9.0"
-  }
+  },
+  "dependenciesMeta": {
+    "@parcel/watcher": {
+      "built": true
+    },
+    "unrs-resolver": {
+      "built": true
+    }
+  },
+  "packageManager": "yarn@4.15.0"
 }

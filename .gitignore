@@ -95,3 +95,9 @@ typings/
 
 # IntelliJ
 .idea/
+
+# yarn
+.yarn/*
+
+# lib
+lib/

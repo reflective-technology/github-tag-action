@@ -10,4 +10,5 @@
 /*.md
 *.gitignore
 *.prettierignore
+yarn.lock
 LICENSE
