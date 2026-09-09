@@ -27,6 +27,7 @@ describe('github-tag-action', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     setBranch('master');
+    // pragma: allowlist nextline secret
     setCommitSha('79e0ea271c26aa152beef77c3275ff7b8f8d8274');
     loadDefaultInputs();
   });
