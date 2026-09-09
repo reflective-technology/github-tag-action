@@ -6,6 +6,9 @@ updates:
       - dependency-name: "@types/node"
         versions:
           - ">=25.0.0"
+      - dependency-name: "conventional-changelog-conventionalcommits"
+        versions:
+          - ">=10.0.0"
     schedule:
       interval: "weekly"
     groups:
