@@ -1,4 +1,4 @@
-interface ChangelogRule {
+interface IChangelogRule {
   /**
    * Commit type.
    * Eg: feat, fix etc.
@@ -17,7 +17,7 @@ interface ChangelogRule {
  * https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/writer-opts.js
  * https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/writer-opts.js
  */
-export const defaultChangelogRules: Readonly<Record<string, ChangelogRule>> = Object.freeze({
+export const defaultChangelogRules: Readonly<Record<string, IChangelogRule>> = Object.freeze({
   feat: { type: 'feat', section: 'Features' },
   fix: { type: 'fix', section: 'Bug Fixes' },
   perf: { type: 'perf', section: 'Performance Improvements' },

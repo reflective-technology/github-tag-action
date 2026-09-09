@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 
 let octokitSingleton: ReturnType<typeof getOctokit>;
 
-interface Tag {
+interface ITag {
   name: string;
   commit: {
     sha: string;
@@ -23,7 +23,7 @@ export function getOctokitSingleton() {
   return octokitSingleton;
 }
 
-export async function listTags(shouldFetchAllTags = false, fetchedTags: Tag[] = [], page = 1): Promise<Tag[]> {
+export async function listTags(shouldFetchAllTags = false, fetchedTags: ITag[] = [], page = 1): Promise<ITag[]> {
   const octokit = getOctokitSingleton();
 
   const tags = await octokit.rest.repos.listTags({

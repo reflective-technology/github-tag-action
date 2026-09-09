@@ -56,7 +56,7 @@ export default async function main() {
 
   // Sanitize identifier according to
   // https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions
-  const identifier = (appendToPreReleaseTag ? appendToPreReleaseTag : currentBranch).replace(/[^a-zA-Z0-9-]/g, '-');
+  const identifier = (appendToPreReleaseTag || currentBranch).replace(/[^a-zA-Z0-9-]/g, '-');
 
   const prefixRegex = new RegExp(`^${tagPrefix}`);
 
@@ -75,7 +75,6 @@ export default async function main() {
     newVersion = customTag;
   } else {
     let previousTag: ReturnType<typeof getLatestTag> | null;
-    let previousVersion: SemVer | null;
     if (!latestPrereleaseTag) {
       previousTag = latestTag;
     } else {
@@ -89,7 +88,7 @@ export default async function main() {
       return;
     }
 
-    previousVersion = parse(previousTag.name.replace(prefixRegex, ''));
+    const previousVersion: SemVer | null = parse(previousTag.name.replace(prefixRegex, ''));
 
     if (!previousVersion) {
       core.setFailed('Could not parse previous tag.');
@@ -106,7 +105,7 @@ export default async function main() {
       {
         releaseRules: mappedReleaseRules
           ? // analyzeCommits doesn't appreciate rules with a section /shrug
-            mappedReleaseRules.map(({ section, ...rest }) => ({ ...rest }))
+            mappedReleaseRules.map(({ ...rest }) => ({ ...rest }))
           : undefined,
       },
       { commits, logger: { log: console.info.bind(console) } },
@@ -118,10 +117,8 @@ export default async function main() {
       if (!bump && defaultPreReleaseBump === 'false') {
         shouldContinue = false;
       }
-    } else {
-      if (!bump && defaultBump === 'false') {
-        shouldContinue = false;
-      }
+    } else if (!bump && defaultBump === 'false') {
+      shouldContinue = false;
     }
 
     // Default bump is set to false and we did not find an automatic bump
@@ -137,7 +134,7 @@ export default async function main() {
 
     // If somebody uses custom release rules on a prerelease branch they might create a 'preprepatch' bump.
     const preReg = /^pre/;
-    if (isPrerelease && preReg.test(bump)) {
+    if (isPrerelease && bump.startsWith('pre')) {
       bump = bump.replace(preReg, '');
     }
 

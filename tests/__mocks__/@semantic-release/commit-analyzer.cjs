@@ -1,6 +1,6 @@
 'use strict';
 
-async function analyzeCommits(pluginConfig, context) {
+function analyzeCommits(pluginConfig, context) {
   const dominated = { major: 3, minor: 2, patch: 1 };
   const rules = [
     ...(pluginConfig.releaseRules || []),

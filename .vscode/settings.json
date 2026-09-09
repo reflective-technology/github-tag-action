@@ -11,6 +11,8 @@
     "premajor",
     "preminor",
     "prepatch",
+    "preprepatch",
+    "rcompare",
     "zipball",
     "ZUIN"
 ]

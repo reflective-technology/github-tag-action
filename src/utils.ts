@@ -1,13 +1,13 @@
 import * as core from '@actions/core';
 import { prerelease, rcompare, valid } from 'semver';
-// @ts-ignore
-const DEFAULT_RELEASE_TYPES = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
+
+const DEFAULT_RELEASE_TYPES = new Set(['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease']);
 
 import { compareCommits, listTags } from './github.js';
 import { defaultChangelogRules } from './defaults.js';
 
-type Tags = Awaited<ReturnType<typeof listTags>>;
-type Commits = Awaited<ReturnType<typeof compareCommits>>;
+type TTags = Awaited<ReturnType<typeof listTags>>;
+type TCommits = Awaited<ReturnType<typeof compareCommits>>;
 
 export async function getValidTags(prefixRegex: RegExp, shouldFetchAllTags: boolean) {
   const tags = await listTags(shouldFetchAllTags);
@@ -32,8 +32,8 @@ export async function getCommits(
   const commits = await compareCommits(baseRef, headRef);
 
   return commits
-    .filter((commit: Commits[number]) => !!commit.commit.message)
-    .map((commit: Commits[number]) => ({
+    .filter((commit: TCommits[number]) => !!commit.commit.message)
+    .map((commit: TCommits[number]) => ({
       message: commit.commit.message,
       hash: commit.sha,
     }));
@@ -47,7 +47,7 @@ export function isPr(ref: string) {
   return ref.includes('refs/pull/');
 }
 
-export function getLatestTag(tags: Tags, prefixRegex: RegExp, tagPrefix: string) {
+export function getLatestTag(tags: TTags, prefixRegex: RegExp, tagPrefix: string) {
   return (
     tags.find(tag => prefixRegex.test(tag.name) && !prerelease(tag.name.replace(prefixRegex, ''))) || {
       name: `${tagPrefix}0.0.0`,
@@ -58,7 +58,7 @@ export function getLatestTag(tags: Tags, prefixRegex: RegExp, tagPrefix: string)
   );
 }
 
-export function getLatestPrereleaseTag(tags: Tags, identifier: string, prefixRegex: RegExp) {
+export function getLatestPrereleaseTag(tags: TTags, identifier: string, prefixRegex: RegExp) {
   return tags
     .filter(tag => prerelease(tag.name.replace(prefixRegex, '')))
     .find(tag => tag.name.replace(prefixRegex, '').match(identifier));
@@ -88,7 +88,7 @@ export function mapCustomReleaseRules(customReleaseTypes: string) {
         );
       }
 
-      if (!DEFAULT_RELEASE_TYPES.includes(parts[1])) {
+      if (!DEFAULT_RELEASE_TYPES.has(parts[1])) {
         core.warning(`${parts[1]} is not a valid release type.`);
         return false;
       }
