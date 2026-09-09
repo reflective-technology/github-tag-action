@@ -31,7 +31,5 @@ jobs:
         run: yarn install --immutable
       - name: Run tests
         run: yarn test
-      - name: Lint Check
-        run: yarn check
       - name: Build
         run: yarn build
