@@ -8,7 +8,7 @@ jest.mock(
     getOctokit: jest.fn().mockReturnValue({
       rest: {
         repos: {
-          listTags: jest.fn().mockImplementation(({ page }: { page: number }) => {
+          listTags: jest.fn<(args: { page: number }) => { data: unknown[] }>().mockImplementation(({ page }) => {
             if (page === 6) {
               return { data: [] };
             }
