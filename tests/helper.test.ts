@@ -26,7 +26,9 @@ export function setInputs(map: Record<string, string>) {
 
 export function loadDefaultInputs() {
   const actionYaml = fs.readFileSync(path.join(process.cwd(), 'action.yml'), 'utf-8');
-  const actionJson = yaml.parse(actionYaml);
+  const actionJson = yaml.parse(actionYaml) as {
+    inputs: Record<string, { default?: string }>;
+  };
   const defaultInputs = Object.keys(actionJson['inputs'])
     .filter(key => actionJson['inputs'][key].default)
     .reduce((obj, key) => ({ ...obj, [key]: actionJson['inputs'][key].default }), {});
