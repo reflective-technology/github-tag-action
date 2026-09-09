@@ -16,7 +16,7 @@ jobs:
         with:
           reporter: "github-pr-review"
           detect_secrets_flags: |
-            --exclude-files 'dist/*'
+            --exclude-files 'dist/index.js'
   eslint:
     runs-on: ubuntu-latest
     steps:
