@@ -46,12 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - version
-    outputs:
-      dist_changed: ${{ steps.file.outputs.dist_changed }}
     if: needs.version.outputs.value != '0.0.0' && needs.version.outputs.tagged == 'false'
     permissions:
-      contents: write
-      id-token: write
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -62,24 +60,24 @@ jobs:
         run: |
           if git diff --name-only HEAD^ HEAD | grep -q "dist/index.js"; then
             echo "dist/index.js has changed"
-            echo "dist_changed=true" >> $GITHUB_OUTPUT
+            echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "dist/index.js has not changed"
-            echo "dist_changed=false" >> $GITHUB_OUTPUT
-            exit 1
+            echo "changed=false" >> $GITHUB_OUTPUT
           fi
-      - name: Debug Output
-        run: echo "DIST_CHANGED=${{ steps.file.outputs.dist_changed }}"
+      - name: Warn if dist/index.js has not changed
+        if: steps.file.outputs.changed == 'false'
+        uses: mshick/add-pr-comment@ec328af66588ab8f77cdeb2c264f14aba45bbf59
+        with:
+          message: "Warning: dist/index.js has not changed"
   tag:
     runs-on: ubuntu-latest
     needs:
       - version
-      - file
     if: |
       github.event_name == 'push' &&
       needs.version.outputs.value != '0.0.0' &&
-      needs.version.outputs.tagged == 'false' &&
-      needs.file.outputs.dist_changed == 'true'
+      needs.version.outputs.tagged == 'false'
     permissions:
       contents: write
       id-token: write
@@ -88,7 +86,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Push tag
         id: tag_version
-        uses: reflective-technology/github-tag-action@c3da065c3412e17e29e9f66c7a08ce8e41aaa1df
+        uses: reflective-technology/github-tag-action@3b1fca757637423b92dc45f5e22de446b516f56d
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag_prefix: "v"
