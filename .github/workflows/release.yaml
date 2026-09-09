@@ -86,7 +86,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Push tag
         id: tag_version
-        uses: reflective-technology/github-tag-action@c3da065c3412e17e29e9f66c7a08ce8e41aaa1df
+        uses: reflective-technology/github-tag-action@3b1fca757637423b92dc45f5e22de446b516f56d
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag_prefix: "v"
