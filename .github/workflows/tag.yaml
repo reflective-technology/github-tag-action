@@ -15,7 +15,7 @@ jobs:
       tagged: ${{ steps.tagged.outputs.tagged }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
       - name: Extract version from package.json
@@ -43,7 +43,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Push tag
         id: tag_version
         uses: reflective-technology/github-tag-action@c3da065c3412e17e29e9f66c7a08ce8e41aaa1df
