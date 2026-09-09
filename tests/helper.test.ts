@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import yaml from 'yaml';
 import fs from 'fs';
 import path from 'path';
 
@@ -31,7 +31,7 @@ export function loadDefaultInputs() {
     path.join(process.cwd(), 'action.yml'),
     'utf-8',
   );
-  const actionJson = yaml.load(actionYaml) as {
+  const actionJson = yaml.parse(actionYaml) as {
     inputs: { [key: string]: { default?: string } };
   };
   const defaultInputs = Object.keys(actionJson['inputs'])
