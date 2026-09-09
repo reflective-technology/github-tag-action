@@ -1,11 +1,9 @@
 import yaml from 'yaml';
 import fs from 'fs';
 import path from 'path';
+import { describe, it, expect } from '@jest/globals';
 
-export function setRepository(
-  GITHUB_SERVER_URL: string,
-  GITHUB_REPOSITORY: string,
-) {
+export function setRepository(GITHUB_SERVER_URL: string, GITHUB_REPOSITORY: string) {
   process.env['GITHUB_SERVER_URL'] = GITHUB_SERVER_URL;
   process.env['GITHUB_REPOSITORY'] = GITHUB_REPOSITORY;
 }
@@ -22,28 +20,24 @@ export function setInput(key: string, value: string) {
   process.env[`INPUT_${key.toUpperCase()}`] = value;
 }
 
-export function setInputs(map: { [key: string]: string }) {
-  Object.keys(map).forEach((key) => setInput(key, map[key]));
+export function setInputs(map: Record<string, string>) {
+  Object.keys(map).forEach(key => setInput(key, map[key]));
 }
 
 export function loadDefaultInputs() {
-  const actionYaml = fs.readFileSync(
-    path.join(process.cwd(), 'action.yml'),
-    'utf-8',
-  );
+  const actionYaml = fs.readFileSync(path.join(process.cwd(), 'action.yml'), 'utf-8');
   const actionJson = yaml.parse(actionYaml) as {
-    inputs: { [key: string]: { default?: string } };
+    inputs: Record<string, { default?: string }>;
   };
   const defaultInputs = Object.keys(actionJson['inputs'])
-    .filter((key) => actionJson['inputs'][key].default)
-    .reduce(
-      (obj, key) => ({ ...obj, [key]: actionJson['inputs'][key].default }),
-      {},
-    );
+    .filter(key => actionJson['inputs'][key].default)
+    .reduce((obj, key) => ({ ...obj, [key]: actionJson['inputs'][key].default }), {});
   setInputs(defaultInputs);
 }
 
 // Don't know how to have this file only for test but not have 'tsc' complain. So I made it a test file...
 describe('helper', () => {
-  it('works', () => {});
+  it('works', () => {
+    expect(true).toBe(true);
+  });
 });

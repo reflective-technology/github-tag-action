@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 
 let octokitSingleton: ReturnType<typeof getOctokit>;
 
-type Tag = {
+interface ITag {
   name: string;
   commit: {
     sha: string;
@@ -12,7 +12,7 @@ type Tag = {
   zipball_url: string;
   tarball_url: string;
   node_id: string;
-};
+}
 
 export function getOctokitSingleton() {
   if (octokitSingleton) {
@@ -23,11 +23,7 @@ export function getOctokitSingleton() {
   return octokitSingleton;
 }
 
-export async function listTags(
-  shouldFetchAllTags = false,
-  fetchedTags: Tag[] = [],
-  page = 1,
-): Promise<Tag[]> {
+export async function listTags(shouldFetchAllTags = false, fetchedTags: ITag[] = [], page = 1): Promise<ITag[]> {
   const octokit = getOctokitSingleton();
 
   const tags = await octokit.rest.repos.listTags({
@@ -56,15 +52,9 @@ export async function compareCommits(baseRef: string, headRef: string) {
   return commits.data.commits;
 }
 
-export async function createTag(
-  newTag: string,
-  createAnnotatedTag: boolean,
-  GITHUB_SHA: string,
-) {
+export async function createTag(newTag: string, createAnnotatedTag: boolean, GITHUB_SHA: string) {
   const octokit = getOctokitSingleton();
-  let annotatedTag:
-    | Awaited<ReturnType<typeof octokit.rest.git.createTag>>
-    | undefined = undefined;
+  let annotatedTag: Awaited<ReturnType<typeof octokit.rest.git.createTag>> | undefined = undefined;
   if (createAnnotatedTag) {
     core.debug(`Creating annotated tag.`);
     annotatedTag = await octokit.rest.git.createTag({

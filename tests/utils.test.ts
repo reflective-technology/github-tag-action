@@ -1,11 +1,16 @@
-import * as utils from '../src/utils';
-import { getValidTags } from '../src/utils';
+import * as utils from '../src/utils.js';
+import { getValidTags } from '../src/utils.js';
 import * as core from '@actions/core';
-import * as github from '../src/github';
-import { defaultChangelogRules } from '../src/defaults';
+import * as github from '../src/github.js';
+import { defaultChangelogRules } from '../src/defaults.js';
+import { describe, it, expect, jest } from '@jest/globals';
 
-jest.spyOn(core, 'debug').mockImplementation(() => {});
-jest.spyOn(core, 'warning').mockImplementation(() => {});
+const emptyFunction = () => {
+  /* empty */
+};
+
+jest.spyOn(core, 'debug').mockImplementation(emptyFunction);
+jest.spyOn(core, 'warning').mockImplementation(emptyFunction);
 
 const regex = /^v/;
 
@@ -64,9 +69,10 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest
-      .spyOn(github, 'listTags')
-      .mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => {
+      await Promise.resolve();
+      return testTags;
+    });
 
     /*
      * When
@@ -114,9 +120,10 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest
-      .spyOn(github, 'listTags')
-      .mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => {
+      await Promise.resolve();
+      return testTags;
+    });
 
     /*
      * When
@@ -163,9 +170,10 @@ describe('utils', () => {
         node_id: 'string',
       },
     ];
-    const mockListTags = jest
-      .spyOn(github, 'listTags')
-      .mockImplementation(async () => testTags);
+    const mockListTags = jest.spyOn(github, 'listTags').mockImplementation(async () => {
+      await Promise.resolve();
+      return testTags;
+    });
     /*
      * When
      */
@@ -189,8 +197,7 @@ describe('utils', () => {
       /*
        * Given
        */
-      const customReleasesString =
-        'james:preminor,bond:premajor,007:major:Breaking Changes,feat:minor';
+      const customReleasesString = 'james:preminor,bond:premajor,007:major:Breaking Changes,feat:minor';
 
       /*
        * When
@@ -249,10 +256,7 @@ describe('utils', () => {
       /**
        * Then
        */
-      expect(result).toEqual([
-        ...Object.values(defaultChangelogRules),
-        newRule,
-      ]);
+      expect(result).toEqual([...Object.values(defaultChangelogRules), newRule]);
     });
 
     it('overwrites existing default type rules with provided rules', () => {
@@ -269,7 +273,7 @@ describe('utils', () => {
        * When
        */
       const result = utils.mergeWithDefaultChangelogRules([newRule]);
-      const overWrittenRule = result.find((rule) => rule.type === 'feat');
+      const overWrittenRule = result.find(rule => rule.type === 'feat');
 
       /**
        * Then

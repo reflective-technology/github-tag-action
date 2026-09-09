@@ -1,4 +1,5 @@
-import { listTags } from '../src/github';
+import { listTags } from '../src/github.js';
+import { describe, it, expect, jest } from '@jest/globals';
 
 jest.mock(
   '@actions/github',
@@ -7,21 +8,19 @@ jest.mock(
     getOctokit: jest.fn().mockReturnValue({
       rest: {
         repos: {
-          listTags: jest
-            .fn()
-            .mockImplementation(({ page }: { page: number }) => {
-              if (page === 6) {
-                return { data: [] };
-              }
-              const res = [...new Array(100).keys()].map((_) => ({
-                name: `v0.0.${_ + (page - 1) * 100}`,
-                commit: { sha: 'string', url: 'string' },
-                zipball_url: 'string',
-                tarball_url: 'string',
-                node_id: 'string',
-              }));
-              return { data: res };
-            }),
+          listTags: jest.fn<(args: { page: number }) => { data: unknown[] }>().mockImplementation(({ page }) => {
+            if (page === 6) {
+              return { data: [] };
+            }
+            const res = [...new Array(100).keys()].map(_ => ({
+              name: `v0.0.${_ + (page - 1) * 100}`,
+              commit: { sha: 'string', url: 'string' },
+              zipball_url: 'string',
+              tarball_url: 'string',
+              node_id: 'string',
+            }));
+            return { data: res };
+          }),
         },
       },
     }),
@@ -31,7 +30,7 @@ jest.mock(
 describe('github', () => {
   it('returns all tags', async () => {
     const tags = await listTags(true);
-    expect(tags.length).toEqual(500);
+    expect(tags).toHaveLength(500);
     expect(tags[499]).toEqual({
       name: 'v0.0.499',
       commit: { sha: 'string', url: 'string' },
@@ -43,7 +42,7 @@ describe('github', () => {
 
   it('returns only the last 100 tags', async () => {
     const tags = await listTags(true);
-    expect(tags.length).toEqual(500);
+    expect(tags).toHaveLength(500);
     expect(tags[99]).toEqual({
       name: 'v0.0.99',
       commit: { sha: 'string', url: 'string' },
