@@ -27,6 +27,6 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Run ESLint
-        uses: reviewdog/action-eslint@5eb89b1e6e94ca33e91c3814c34b25a8370bba46
+        uses: reviewdog/action-eslint@3ee2a450da17e060b9dfa4bffd53976906c6b2b0
         with:
           reporter: "github-pr-review"
