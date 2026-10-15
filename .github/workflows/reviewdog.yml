@@ -30,3 +30,15 @@ jobs:
         uses: reviewdog/action-eslint@3ee2a450da17e060b9dfa4bffd53976906c6b2b0
         with:
           reporter: "github-pr-review"
+  detect-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Run trivy
+        uses: reviewdog/action-trivy@0eb5663c96f2b3ae3c38e7804f89821339085f0e
+        with:
+          reporter: "github-pr-review"
+          trivy_command: fs
+          trivy_target: .
+          trivy_flags: --scanners secret
