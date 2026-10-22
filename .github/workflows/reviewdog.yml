@@ -36,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Run trivy
-        uses: reviewdog/action-trivy@0eb5663c96f2b3ae3c38e7804f89821339085f0e
+        uses: reviewdog/action-trivy@1d4e9cf7cd9d2a130f84f9c4d171dcdea3af5348
         with:
           reporter: "github-pr-review"
           trivy_command: fs
