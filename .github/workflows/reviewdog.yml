@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Run ESLint
-        uses: reviewdog/action-eslint@3ee2a450da17e060b9dfa4bffd53976906c6b2b0
+        uses: reviewdog/action-eslint@6dad10dc50476699ad1ddbbb19bf55d36f311a39
         with:
           reporter: "github-pr-review"
   detect-secrets:
@@ -36,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Run trivy
-        uses: reviewdog/action-trivy@1d4e9cf7cd9d2a130f84f9c4d171dcdea3af5348
+        uses: reviewdog/action-trivy@c51bf26459dab6a2b5c34e7f43eeb475746f1a00
         with:
           reporter: "github-pr-review"
           trivy_command: fs
